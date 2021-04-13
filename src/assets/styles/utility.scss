@@ -1,0 +1,48 @@
+$current: 0;
+$step: 10;
+
+@while ($current < 101) {
+    $current-percent: $current * 1%;
+    $current-vw: $current * 1vw;
+    $current-vh: $current * 1vh;
+
+    .max-w-#{$current} {
+        max-width: $current-percent;
+    }
+    .min-w-#{$current} {
+        min-width: $current-percent;
+    }
+    .max-h-#{$current} {
+        max-height: $current-percent;
+    }
+    .min-h-#{$current} {
+        min-height: $current-percent;
+    }
+    .w-#{$current} {
+        width: $current-percent;
+    }
+    .h-#{$current} {
+        height: $current-percent;
+    }
+
+    .max-w-#{$current}-screen {
+        max-width: $current-vw;
+    }
+    .min-w-#{$current}-screen {
+        min-width: $current-vw;
+    }
+    .max-h-#{$current}-screen {
+        max-height: $current-vh;
+    }
+    .min-h-#{$current}-screen {
+        min-height: $current-vh;
+    }
+    .w-#{$current}-screen {
+        width: $current-vw;
+    }
+    .h-#{$current}-screen {
+        height: $current-vh;
+    }
+
+    $current: $current + $step;
+}

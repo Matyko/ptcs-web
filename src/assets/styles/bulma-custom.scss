@@ -1,0 +1,117 @@
+@import "~bulma/sass/utilities/_all";
+
+// Primary
+$primary: #089393;
+$primary-light: findLightColor($primary);
+$primary-dark: findDarkColor($primary);
+$primary-invert: findColorInvert($primary);
+
+// Info
+$info: blue;
+$info-light: findLightColor($info);
+$info-dark: findDarkColor($info);
+$info-invert: findColorInvert($info);
+
+// Success
+$success: green;
+$success-light: findLightColor($success);
+$success-dark: findDarkColor($success);
+$success-invert: findColorInvert($success);
+
+// Warning
+$warning: yellow;
+$warning-light: findLightColor($warning);
+$warning-dark: findDarkColor($warning);
+$warning-invert: findColorInvert($warning);
+
+// Danger
+$danger: red;
+$danger-light: findLightColor($danger);
+$danger-dark: findDarkColor($danger);
+$danger-invert: findColorInvert($danger);
+
+// Lighter
+$lighter: findLightColor($light);
+$lighter-invert: findColorInvert($lighter);
+
+// Darker
+$darker: findDarkColor($dark);
+$darker-invert: findColorInvert($darker);
+
+// Link
+$link: $primary;
+$link-invert: $primary-invert;
+$link-focus-border: $primary;
+
+$custom-colors: null !default;
+$custom-shades: null !default;
+
+// Set colors
+$colors: mergeColorMaps(
+  (
+    "white": (
+      $white,
+      $black,
+    ),
+    "black": (
+      $black,
+      $white,
+    ),
+    "lighter": (
+      $lighter,
+      $lighter-invert,
+    ),
+    "light": (
+      $light,
+      $light-invert,
+    ),
+    "dark": (
+      $dark,
+      $dark-invert,
+    ),
+    "darker": (
+      $darker,
+      $darker-invert,
+    ),
+    "primary": (
+      $primary,
+      $primary-invert,
+      $primary-light,
+      $primary-dark,
+    ),
+    "link": (
+      $link,
+      $link-invert,
+      $link-light,
+      $link-dark,
+    ),
+    "info": (
+      $info,
+      $info-invert,
+      $info-light,
+      $info-dark,
+    ),
+    "success": (
+      $success,
+      $success-invert,
+      $success-light,
+      $success-dark,
+    ),
+    "warning": (
+      $warning,
+      $warning-invert,
+      $warning-light,
+      $warning-dark,
+    ),
+    "danger": (
+      $danger,
+      $danger-invert,
+      $danger-light,
+      $danger-dark,
+    ),
+  ),
+  $custom-colors
+);
+
+@import "~bulma";
+@import "~buefy/src/scss/buefy";

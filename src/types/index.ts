@@ -59,4 +59,9 @@ export enum PathNames {
     Contact = 'contact',
     ParkEditor = 'park-editor',
     MyParks = 'my-parks',
+    Events = 'events',
+    Friends = 'friends',
+    Groups = 'groups',
+    Settings = 'settings',
+    Messages = 'messages',
 }

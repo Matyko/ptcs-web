@@ -1,5 +1,5 @@
 <template>
-  <BNavbar style="box-shadow: 0 0 2px 0">
+  <BNavbar style="box-shadow: 0 0 2px 0; position: sticky; top: 0;">
     <template #brand>
       <BNavbarItem
           :to="{ name: 'home' }"

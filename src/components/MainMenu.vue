@@ -48,21 +48,21 @@ export default class MainMenu extends Vue {
       label: 'Events',
       icon: 'calendar',
       to: {
-        name: PathNames.Home,
+        name: PathNames.Events,
       },
     },
     {
       label: 'Friends',
       icon: 'user-friends',
       to: {
-        name: PathNames.Home,
+        name: PathNames.Friends,
       },
     },
     {
       label: 'Groups',
       icon: 'users',
       to: {
-        name: PathNames.Home,
+        name: PathNames.Groups,
       },
     },
     {
@@ -70,6 +70,20 @@ export default class MainMenu extends Vue {
       icon: 'leaf',
       to: {
         name: PathNames.MyParks,
+      },
+    },
+    {
+      label: 'Settings',
+      icon: 'cog',
+      to: {
+        name: PathNames.Settings,
+      },
+    },
+    {
+      label: 'Messages',
+      icon: 'comment',
+      to: {
+        name: PathNames.Messages
       },
     },
   ];

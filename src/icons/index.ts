@@ -27,6 +27,8 @@ import {
     faCalendar,
     faCalendarPlus,
     faPlusCircle,
+    faCog,
+    faComment,
 } from '@fortawesome/free-solid-svg-icons';
 import {
     faGoogle,
@@ -58,6 +60,8 @@ library.add(
     faUserFriends,
     faCalendarPlus,
     faPlusCircle,
+    faCog,
+    faComment
 );
 
 Vue.component('vue-fontawesome', FontAwesomeIcon);

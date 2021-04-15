@@ -56,6 +56,46 @@ const router = new Router({
             },
         },
         {
+            path: '/events',
+            name: PathNames.Events,
+            component: () => import(/* webpackChunkName: "events" */ './views/Events.vue'),
+            meta: {
+                requiresAuth: true,
+            },
+        },
+        {
+            path: '/friends',
+            name: PathNames.Friends,
+            component: () => import(/* webpackChunkName: "friends" */ './views/Friends.vue'),
+            meta: {
+                requiresAuth: true,
+            },
+        },
+        {
+            path: '/groups',
+            name: PathNames.Groups,
+            component: () => import(/* webpackChunkName: "groups" */ './views/Groups.vue'),
+            meta: {
+                requiresAuth: true,
+            },
+        },
+        {
+            path: '/messages',
+            name: PathNames.Messages,
+            component: () => import(/* webpackChunkName: "messages" */ './views/Messages.vue'),
+            meta: {
+                requiresAuth: true,
+            },
+        },
+        {
+            path: '/settings',
+            name: PathNames.Settings,
+            component: () => import(/* webpackChunkName: "settings" */ './views/Settings.vue'),
+            meta: {
+                requiresAuth: true,
+            },
+        },
+        {
             path: '/park-editor/:id?',
             name: PathNames.ParkEditor,
             component: () => import(/* webpackChunkName: "park-editor" */ './views/ParkEditor.vue'),

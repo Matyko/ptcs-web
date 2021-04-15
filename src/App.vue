@@ -3,7 +3,7 @@
     <template v-if="$store.state.AUTH_READY">
       <NavBar />
       <div class="is-flex is-flex-grow-1">
-        <MainMenu />
+        <MainMenu v-if="$store.state.LOGGED_IN" />
         <router-view class="is-flex-grow-1"/>
       </div>
     </template>

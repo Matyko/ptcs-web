@@ -9,7 +9,7 @@
             </p>
           </header>
           <div class="card-content">
-            <b-input-with-validator
+            <BInputWithValidator
                 v-model="email"
                 label="Email"
                 name="email"
@@ -18,7 +18,7 @@
                 type="email"
                 vid="email"
             />
-            <b-input-with-validator
+            <BInputWithValidator
                 v-model="password"
                 label="Password"
                 name="password"
@@ -31,7 +31,7 @@
           </div>
           <footer class="card-footer">
             <div class="card-footer-item is-flex-direction-column">
-              <b-button
+              <BButton
                   :disabled="loading"
                   :loading="loading"
                   class="px-6 mb-4"
@@ -41,8 +41,8 @@
                   @click="handleSubmit(submit)"
               >
                 Log in
-              </b-button>
-              <b-button
+              </BButton>
+              <BButton
                   :loading="googleLoading"
                   class="px-6 mb-4"
                   expanded
@@ -53,13 +53,13 @@
                   @click="loginWithGoogle"
               >
                 Log in using Google
-              </b-button>
-              <router-link
+              </BButton>
+              <RouterLink
                   :to="{ name: 'sign-up' }"
                   class="is-size-7 mb-4"
               >
                 No account yet? Sign up!
-              </router-link>
+              </RouterLink>
             </div>
           </footer>
         </div>

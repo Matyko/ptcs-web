@@ -10,7 +10,7 @@
           </header>
           <div class="card-content">
             <div class="is-flex">
-              <b-input-with-validator
+              <BInputWithValidator
                   v-model="firstName"
                   label="First Name"
                   name="first-name"
@@ -19,7 +19,7 @@
                   vid="first-name"
               />
               <div style="width: 1rem;" />
-              <b-input-with-validator
+              <BInputWithValidator
                   v-model="lastName"
                   label="Last Name"
                   name="last-name"
@@ -28,7 +28,7 @@
                   vid="last-name"
               />
             </div>
-            <b-input-with-validator
+            <BInputWithValidator
                 v-model="email"
                 label="Email"
                 name="email"
@@ -37,7 +37,7 @@
                 type="email"
                 vid="email"
             />
-            <b-input-with-validator
+            <BInputWithValidator
                 v-model="password"
                 label="Password"
                 name="password"
@@ -47,7 +47,7 @@
                 type="password"
                 vid="password"
             />
-            <b-input-with-validator
+            <BInputWithValidator
                 v-model="confirmation"
                 label="Confirm Password"
                 name="password-confirm"
@@ -60,7 +60,7 @@
           </div>
           <footer class="card-footer">
             <div class="card-footer-item is-flex-direction-column">
-              <b-button
+              <BButton
                   :disabled="loading"
                   :loading="loading"
                   class="px-6 mb-4"
@@ -70,8 +70,8 @@
                   @click="handleSubmit(submit)"
               >
                 Sign up
-              </b-button>
-              <b-button
+              </BButton>
+              <BButton
                   :loading="googleLoading"
                   class="px-6 mb-4"
                   expanded
@@ -82,13 +82,13 @@
                   @click="loginWithGoogle"
               >
                 Log in using Google
-              </b-button>
-              <router-link
+              </BButton>
+              <RouterLink
                   :to="{ name: 'log-in' }"
                   class="is-size-7 mb-4"
               >
                 Already have an account? Log in here!
-              </router-link>
+              </RouterLink>
             </div>
           </footer>
         </div>

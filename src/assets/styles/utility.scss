@@ -46,3 +46,7 @@ $step: 10;
 
     $current: $current + $step;
 }
+
+.is-absolute {
+    position: absolute;
+}

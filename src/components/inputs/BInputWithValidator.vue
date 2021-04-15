@@ -4,17 +4,19 @@
       :name="$attrs.name || $attrs.label"
       :rules="rules"
       :vid="vid"
+      slim
   >
-    <b-field
+    <BField
         v-bind="$attrs"
         :message="errors"
         :type="{ 'is-danger': errors[0], 'is-success': valid }"
     >
-      <b-input
+      <BInput
           v-model="innerValue"
           v-bind="$attrs"
-      ></b-input>
-    </b-field>
+          v-on="$listeners"
+      ></BInput>
+    </BField>
   </ValidationProvider>
 </template>
 

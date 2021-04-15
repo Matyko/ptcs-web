@@ -19,6 +19,14 @@ import {
     faSearch,
     faPlus,
     faEdit,
+    faTrashAlt,
+    faLeaf,
+    faHome,
+    faUsers,
+    faUserFriends,
+    faCalendar,
+    faCalendarPlus,
+    faPlusCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import {
     faGoogle,
@@ -42,6 +50,14 @@ library.add(
     faSearch,
     faPlus,
     faEdit,
+    faTrashAlt,
+    faLeaf,
+    faHome,
+    faCalendar,
+    faUsers,
+    faUserFriends,
+    faCalendarPlus,
+    faPlusCircle,
 );
 
 Vue.component('vue-fontawesome', FontAwesomeIcon);

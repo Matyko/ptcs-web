@@ -1,5 +1,5 @@
 <template>
-  <b-autocomplete icon="search" placeholder="Search" rounded />
+  <BAutocomplete icon="search" placeholder="Search" rounded />
 </template>
 
 <script>

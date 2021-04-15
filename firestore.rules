@@ -2,24 +2,32 @@ rules_version = '2';
 service cloud.firestore {
     match /databases/{database}/documents {
 
-        function hasRole(rsc) {
-            return request.auth.uid in rsc.data.users;
+        function isAdmin() {
+            return request.auth.uid != null && request.auth.uid in get(/databases/$(database)/documents/roles/admin).data.users;
+        }
+
+        function canContributeToParkRequest() {
+            return isAdmin()
+            || resource.data.park != null
+            && resource.data.park.contributors != null
+            && request.auth.uid in resource.data.park.contributors;
         }
 
         match /users/{userId} {
-            allow read, update, delete: if request.auth != null && request.auth.uid == userId;
+            allow read, update: if request.auth != null && request.auth.uid == userId;
             allow create: if request.auth != null;
+            allow delete: if isAdmin();
         }
 
-        match /parks-pending/{parkId} {
-            allow create, read: if request.auth != null;
-            allow update: if request.auth.uid in request.resource.data.contributors;
-            allow delete: if request.auth != null && hasRole(get(/databases/$(database)/documents/roles/admin));
+        match /park-requests/{parkRequestId} {
+            allow create: if request.auth != null;
+            allow update, delete: if request.auth != null && !resource.data.submitted && canContributeToParkRequest();
+            allow update, delete, read: if request.auth.uid != null && canContributeToParkRequest();
         }
 
         match /parks/{parkId} {
             allow read: if true;
-            allow create, update, delete: if request.auth != null && hasRole(get(/databases/$(database)/documents/roles/admin));
+            allow create, update, delete: if request.auth != null && isAdmin();
         }
     }
 }

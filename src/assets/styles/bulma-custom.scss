@@ -113,5 +113,8 @@ $colors: mergeColorMaps(
   $custom-colors
 );
 
+$sidebar-box-shadow: 0 0 2px 0;
+$sidebar-width: 250px;
+
 @import "~bulma";
 @import "~buefy/src/scss/buefy";

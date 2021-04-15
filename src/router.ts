@@ -5,6 +5,7 @@ import SignUp from './views/SignUp.vue';
 import LogIn from './views/LogIn.vue';
 import store from '@/store/store';
 import {StateType} from '@/store/types';
+import {PathNames} from '@/types';
 
 Vue.use(Router);
 
@@ -14,7 +15,7 @@ const router = new Router({
     routes: [
         {
             path: '/',
-            name: 'home',
+            name: PathNames.Home,
             component: Home,
             meta: {
                 requiresAuth: true,
@@ -22,17 +23,17 @@ const router = new Router({
         },
         {
             path: '/sign-up',
-            name: 'sign-up',
+            name: PathNames.SignUp,
             component: SignUp,
         },
         {
             path: '/log-in',
-            name: 'log-in',
+            name: PathNames.Login,
             component: LogIn,
         },
         {
             path: '/about',
-            name: 'about',
+            name: PathNames.About,
             component: () => import(/* webpackChunkName: "about" */ './views/About.vue'),
             meta: {
                 requiresAuth: true,
@@ -40,15 +41,23 @@ const router = new Router({
         },
         {
             path: '/contact',
-            name: 'contact',
+            name: PathNames.Contact,
             component: () => import(/* webpackChunkName: "contact" */ './views/Contact.vue'),
             meta: {
                 requiresAuth: true,
             },
         },
         {
+            path: '/my-parks',
+            name: PathNames.MyParks,
+            component: () => import(/* webpackChunkName: "my-parks" */ './views/MyParks.vue'),
+            meta: {
+                requiresAuth: true,
+            },
+        },
+        {
             path: '/park-editor/:id?',
-            name: 'park-editor',
+            name: PathNames.ParkEditor,
             component: () => import(/* webpackChunkName: "park-editor" */ './views/ParkEditor.vue'),
             props: true,
             meta: {

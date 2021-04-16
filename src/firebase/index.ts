@@ -21,24 +21,39 @@ export const db = firebase.firestore();
 
 export const storage = firebase.storage().ref();
 
-firebase.auth().onAuthStateChanged(async (user) => {
-    if (user && !store.state[StateType.USER]) {
-        const doc = await db.collection('users').doc(user.uid).get();
-        if (doc.exists) {
-            const loggedInUser = {...doc.data(), id: user.uid} as User;
-            store.commit(MutationType.SET_USER, loggedInUser);
-            store.commit(MutationType.SET_LOGGED_IN, true);
-            if (['log-in', 'sign-up'].includes(router.currentRoute.name || '')) {
-                await router.push({name: 'home'});
+export const initialAuth = new Promise((resolve) => {
+    firebase.auth().onAuthStateChanged(async (user) => {
+        if (user && !store.state[StateType.USER]) {
+            const doc = await db.collection('users').doc(user.uid).get();
+            if (doc.exists) {
+                const loggedInUser = {...doc.data(), id: user.uid, roles: {}} as User;
+                const token = await user.getIdTokenResult(true);
+                if (token.claims) {
+                    if (token.claims.admin) {
+                        loggedInUser.roles.admin = true;
+                        loggedInUser.roles.moderator = true;
+                    }
+                    if (token.claims.moderator) {
+                        loggedInUser.roles.admin = true;
+                    }
+                }
+                Object.freeze(loggedInUser.roles);
+                store.commit(MutationType.SET_USER, loggedInUser);
+                store.commit(MutationType.SET_LOGGED_IN, true);
+                const needRedirect = ['log-in', 'sign-up'].includes(router.currentRoute.name as string);
+                resolve(needRedirect);
+                if (needRedirect) {
+                    await router.push({name: 'home'});
+                }
+            }
+        } else {
+            store.commit(MutationType.SET_USER, null);
+            store.commit(MutationType.SET_LOGGED_IN, false);
+            if (!['log-in', 'sign-up'].includes(router.currentRoute.name || '')) {
+                await router.push({name: 'log-in'});
             }
         }
-    } else {
-        store.commit(MutationType.SET_USER, null);
-        store.commit(MutationType.SET_LOGGED_IN, false);
-        if (!['log-in', 'sign-up'].includes(router.currentRoute.name || '')) {
-            await router.push({name: 'log-in'});
-        }
-    }
-    store.commit(MutationType.SET_AUTH_READY, true);
+        store.commit(MutationType.SET_AUTH_READY, true);
+    });
 });
 

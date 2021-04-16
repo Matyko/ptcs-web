@@ -3,27 +3,60 @@
     <ParkForm
         v-if="editing"
         v-model="parkRequest.park"
-        editing
         :loading="loading"
+        :submitted="parkRequest.submitted"
         :uploads="uploads"
+        editing
+        @delete="startDeleteParkRequest"
         @save="save"
         @submit="submit"
         @upload-images="uploadImages"
         @delete-upload="deleteUpload"
-        @delete="startDeleteParkRequest"
     />
     <ParkCardDetailed
         v-else
         :park="parkRequest.park"
     >
       <template #actions>
-        <BButton
-            icon-left="edit"
-            outlined
-            type="is-primary"
-            @click="editing = true"
-        >Edit
-        </BButton>
+        <div class="is-flex is-justify-content-space-between is-flex-grow-1">
+          <BButton
+              v-if="!parkRequest.submitted || $store.state.USER.roles && $store.state.USER.roles.admin"
+              icon-left="edit"
+              outlined
+              type="is-primary"
+              @click="startEditing"
+          >Edit
+          </BButton>
+          <div
+              v-if="$store.state.USER.roles && $store.state.USER.roles.admin"
+              class="buttons"
+          >
+            <template v-if="parkRequest.status === 'pending'">
+              <BButton
+                  icon-left="check"
+                  type="is-primary"
+                  @click="startApprovePark"
+              >Approve
+              </BButton>
+              <BButton
+                  icon-left="exclamation-circle"
+                  type="is-danger"
+                  @click="startRejectPark"
+              >Reject
+              </BButton>
+            </template>
+            <BTag
+                v-else
+                class="is-capitalized"
+                type="is-info"
+            >
+              status:
+              <b>
+                {{ parkRequest.status }}
+              </b>
+            </BTag>
+          </div>
+        </div>
       </template>
     </ParkCardDetailed>
   </div>
@@ -31,7 +64,7 @@
 
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator';
-import {CollectionType, Park, ParkPhoto, ParkPhotoUpload, ParkRequest, PathNames} from '@/types';
+import {CollectionType, Park, ParkPhoto, ParkPhotoUpload, ParkRequest, ParkRequestStatus, PathNames} from '@/types';
 import {db, storage} from '@/firebase';
 import BInputWithValidator from '@/components/inputs/BInputWithValidator.vue';
 import MapComponent from '@/components/park-editor/MapComponent.vue';
@@ -72,15 +105,17 @@ export default class ParkEditor extends Vue {
 
   public created() {
     this.loadPark();
+    if (this.$route.query.editing) {
+      this.editing = true;
+    }
   }
 
   public async loadPark() {
     if (!this.id) {
-      this.editing = true;
       try {
         this.parkRequest.park.contributors.push(this.$store.state[StateType.USER].id);
         const doc = await db.collection(CollectionType.ParkRequests).add(this.parkRequest);
-        await this.$router.push({name: PathNames.ParkEditor, params: {id: doc.id}});
+        await this.$router.push({name: PathNames.ParkEditor, params: {id: doc.id}, query: {editing: 'true'}});
       } catch {
         this.$buefy.toast.open({
           type: 'is-danger',
@@ -94,6 +129,13 @@ export default class ParkEditor extends Vue {
         this.parkRequest = parkRequest;
         this.originalPark = JSON.parse(JSON.stringify(parkRequest));
       }
+    }
+  }
+
+  public startEditing() {
+    if (this.id) {
+      this.$router.replace({name: PathNames.ParkEditor, params: {id: this.id}, query: {editing: 'true'}});
+      this.editing = true;
     }
   }
 
@@ -151,15 +193,15 @@ export default class ParkEditor extends Vue {
       type: 'is-danger',
       message: 'Are you sure you want to <strong>delete</strong> this park request?',
       onConfirm: () => this.deleteParkRequest(),
-      confirmText: 'Delete'
-    })
+      confirmText: 'Delete',
+    });
   }
 
   public async deleteParkRequest() {
     try {
-      await db.collection(CollectionType.ParkRequests).doc(this.id).delete()
+      await db.collection(CollectionType.ParkRequests).doc(this.id).delete();
       this.parkRequest.park.photos.forEach(this.deleteUpload);
-      await this.$router.push({ name: PathNames.MyParks })
+      await this.$router.push({name: PathNames.MyParks});
     } catch (e) {
       this.$buefy.toast.open({
         type: 'is-danger',
@@ -172,8 +214,9 @@ export default class ParkEditor extends Vue {
   public async submit() {
     try {
       this.parkRequest.submitted = true;
+      this.parkRequest.status = ParkRequestStatus.Pending;
       await db.collection(CollectionType.ParkRequests).doc(this.id).set(this.parkRequest);
-      await this.$router.push({ name: PathNames.MyParks });
+      await this.$router.push({name: PathNames.MyParks});
       this.$buefy.toast.open({
         type: 'is-success',
         message: 'Park submitted for review!',
@@ -183,7 +226,6 @@ export default class ParkEditor extends Vue {
         type: 'is-danger',
         message: 'Something went wrong. Please try again!',
       });
-      console.error(e);
     }
   }
 
@@ -196,18 +238,74 @@ export default class ParkEditor extends Vue {
           type: 'is-success',
           message: 'Changes saved!',
         });
-        if (redirect) {
-          await this.$router.push({ name: PathNames.MyParks })
+        if (redirect && this.id) {
+          await this.$router.push({name: PathNames.ParkEditor, params: {id: this.id}});
+          this.editing = false;
         }
       } catch (e) {
         this.$buefy.toast.open({
           type: 'is-danger',
           message: 'Something went wrong. Please try again!',
         });
-        console.error(e);
       }
     }
     this.loading = false;
+  }
+
+  public async createPark() {
+    this.loading = true;
+    try {
+      const park = this.parkRequest.park;
+      park.active = true;
+      await db.collection(CollectionType.Parks).add(park);
+      this.$buefy.toast.open({
+        type: 'is-success',
+        message: `Park: ${park.name} successfully created and live!`,
+      });
+    } catch (e) {
+      this.$buefy.toast.open({
+        type: 'is-danger',
+        message: 'Something went wrong. Please try again!',
+      });
+      console.log(e);
+    }
+    this.loading = false;
+  }
+
+  public startApprovePark() {
+    this.$buefy.dialog.confirm({
+      type: 'is-warning',
+      message: 'Are you sure you want to <strong>approve</strong> this park and make it live?',
+      confirmText: 'Approve',
+      hasIcon: true,
+      onConfirm: () => this.approvePark(),
+    });
+  }
+
+  public approvePark() {
+    this.parkRequest.status = ParkRequestStatus.Accepted;
+    this.save(true);
+    this.createPark();
+  }
+
+  public startRejectPark() {
+    this.$buefy.dialog.prompt({
+      type: 'is-danger',
+      message: 'Are you sure you want to <strong>reject</strong> this park and make it live?',
+      confirmText: 'Reject',
+      hasIcon: true,
+      inputAttrs: {
+        placeholder: 'Reason for rejecting this park',
+        min: '8',
+      },
+      onConfirm: (reason) => this.rejectPark(reason),
+    });
+  }
+
+  public rejectPark(reason: string) {
+    this.parkRequest.status = ParkRequestStatus.Rejected;
+    this.parkRequest.statusMessage = reason;
+    this.save(true);
   }
 }
 </script>

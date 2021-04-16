@@ -29,6 +29,7 @@ import {
     faPlusCircle,
     faCog,
     faComment,
+    faHouseUser,
 } from '@fortawesome/free-solid-svg-icons';
 import {
     faGoogle,
@@ -61,7 +62,8 @@ library.add(
     faCalendarPlus,
     faPlusCircle,
     faCog,
-    faComment
+    faComment,
+    faHouseUser,
 );
 
 Vue.component('vue-fontawesome', FontAwesomeIcon);

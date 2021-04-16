@@ -6,6 +6,7 @@ export interface User {
     photoUrl?: string;
     phone?: string;
     id: string;
+    roles: { admin: boolean, moderator: boolean };
 }
 
 export interface GeoData {
@@ -29,10 +30,18 @@ export interface Park extends WithTimeStamp {
     description?: string;
 }
 
+export enum ParkRequestStatus {
+    Rejected = 'rejected',
+    Accepted = 'accepted',
+    Pending = 'pending',
+}
+
 export interface ParkRequest extends WithTimeStamp {
     park: Park;
     submitted: boolean;
     id?: string;
+    status?: ParkRequestStatus;
+    statusMessage?: string;
 }
 
 export interface ParkPhoto {
@@ -64,4 +73,6 @@ export enum PathNames {
     Groups = 'groups',
     Settings = 'settings',
     Messages = 'messages',
+    Profile = 'profile',
+    Admin = 'admin',
 }

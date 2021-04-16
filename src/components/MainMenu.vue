@@ -4,19 +4,23 @@
       mobile="reduce"
       open
       position="static"
-      type="is-white"
+      type="is-lighter"
   >
-    <BMenu class="p-4">
-      <BMenuList label="Menu">
+    <BMenu>
+      <BMenuList>
+        <template #label>
+          <div class="menu-label p-3 is-size-7">Menu</div>
+        </template>
         <BMenuItem
             v-for="item in menuItems"
             :key="item.label"
             :icon="item.icon"
             :to="item.to"
             tag="router-link"
+            exact-active-class="has-background-primary has-text-white"
         >
           <template #label>
-            <span class="is-hidden-mobile">{{ item.label }}</span>
+            <span class="is-hidden-mobile px-2">{{ item.label }}</span>
           </template>
         </BMenuItem>
       </BMenuList>

@@ -4,9 +4,10 @@ import App from './App.vue';
 import router from './router';
 import store from './store/store';
 import './icons';
+import './firebase';
+import './filters';
 import './components/inputs/vee-validate';
 import './assets/styles/app.scss';
-import './firebase';
 
 Vue.use(Buefy, {
     defaultIconComponent: 'vue-fontawesome',

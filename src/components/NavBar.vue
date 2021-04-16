@@ -54,24 +54,42 @@
         />
         <strong>Organise event</strong>
       </BNavbarItem>
-      <BNavbarDropdown>
+      <BNavbarDropdown v-if="user">
         <template #label>
           <div class="is-flex is-align-items-center">
             <figure
                 v-if="user.photoUrl"
                 class="image is-32x32 mr-2"
+                style="overflow: hidden;"
             >
               <img
                   :src="user.photoUrl"
-                  class="is-rounded"
                   alt="Image of user"
+                  class="is-rounded"
               >
             </figure>
             <span class="has-text-weight-bold">
             {{ user.name || user.firstName }}
-          </span>
+            </span>
           </div>
         </template>
+        <BNavbarItem
+            v-if="user.roles && user.roles.admin"
+            :to="{ name: 'admin' }"
+            tag="router-link"
+        >
+          <BIcon
+              class="mr-2"
+              icon="house-user"
+          />
+          Admin panel
+        </BNavbarItem>
+        <BNavbarItem
+            :to="{ name: 'profile' }"
+            tag="router-link"
+        >
+          Profile
+        </BNavbarItem>
         <BNavbarItem @click="logOut">
           Log Out
         </BNavbarItem>

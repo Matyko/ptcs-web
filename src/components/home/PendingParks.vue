@@ -41,13 +41,23 @@
           <ParkCard
               :park="parkRequest.park"
           >
-            <div class="is-flex is-justify-content-space-between is-flex-grow-1 is-align-items-center">
-              <p class="has-text-weight-bold">{{ parkRequest.park.name }}</p>
-              <BTag
-                  class="has-text-weight-bold"
-                  type="is-info"
-              >Under review
-              </BTag>
+            <div class="is-flex-grow-1">
+              <div class="is-flex is-justify-content-space-between is-align-items-center">
+                <p class="has-text-weight-bold">{{ parkRequest.park.name }}</p>
+                <BTag
+                    class="has-text-weight-bold"
+                    type="is-info"
+                >
+                  {{ parkRequest.status }}
+                </BTag>
+              </div>
+              <b-message
+                  v-show="parkRequest.statusMessage"
+                  size="is-small"
+                  class="mt-2"
+              >
+                Status message: <strong>{{ parkRequest.statusMessage }}</strong>
+              </b-message>
             </div>
           </ParkCard>
         </li>

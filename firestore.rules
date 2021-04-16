@@ -2,32 +2,27 @@ rules_version = '2';
 service cloud.firestore {
     match /databases/{database}/documents {
 
-        function isAdmin() {
-            return request.auth.uid != null && request.auth.uid in get(/databases/$(database)/documents/roles/admin).data.users;
-        }
-
         function canContributeToParkRequest() {
-            return isAdmin()
-            || resource.data.park != null
+            return resource.data.park != null
             && resource.data.park.contributors != null
             && request.auth.uid in resource.data.park.contributors;
         }
 
         match /users/{userId} {
-            allow read, update: if request.auth != null && request.auth.uid == userId;
-            allow create: if request.auth != null;
-            allow delete: if isAdmin();
+            allow create, list: if request.auth != null;
+            allow get, update: if request.auth != null && request.auth.uid == userId;
+            allow delete: if request.auth != null && request.auth.token.admin;
         }
 
         match /park-requests/{parkRequestId} {
             allow create: if request.auth != null;
-            allow update, delete: if request.auth != null && !resource.data.submitted && canContributeToParkRequest();
-            allow update, delete, read: if request.auth.uid != null && canContributeToParkRequest();
+            allow read: if request.auth != null && canContributeToParkRequest();
+            allow update, delete: if request.auth != null && canContributeToParkRequest();
         }
 
         match /parks/{parkId} {
             allow read: if true;
-            allow create, update, delete: if request.auth != null && isAdmin();
+            allow create, update, delete: if request.auth != null && (request.auth.token.admin || request.auth.token.admin);
         }
     }
 }

@@ -14,9 +14,9 @@
     </header>
     <form>
       <BInputWithValidator
-          label="Name"
-          horizontal
           v-model="newPark.name"
+          horizontal
+          label="Name"
       />
       <BField
           class="mb-4"
@@ -85,7 +85,10 @@
               v-for="photo in newPark.photos"
               :key="photo.name"
           >
-            <div class="p-2 mr-2 mb-2 has-background-white" style="border: 1px solid #efefef; border-radius: 4px;">
+            <div
+                class="p-2 mr-2 mb-2 has-background-white"
+                style="border: 1px solid #efefef; border-radius: 4px;"
+            >
               <ParkFormImage
                   :upload="photo"
                   @delete="$emit('delete-upload', photo)"
@@ -110,35 +113,42 @@
       <footer class="is-flex is-justify-content-space-between">
         <div class="buttons">
           <BButton
+              v-if="!submitted || $store.state.USER.roles && $store.state.USER.roles.admin"
               :disabled="loading"
               :loading="loading"
-              type="is-primary"
               outlined
+              type="is-primary"
               @click="handleSubmit(() => $emit('save', true))"
           >
             <strong>
               Save and continue later
             </strong>
           </BButton>
-            <ButtonWithDropdown
-                :disabled="loading"
-                :loading="loading"
-                type="is-danger"
-                outlined
-                position="is-top-left"
-                @click="$router.push({name: 'home'})"
-            >
-              <strong>
-                Cancel
-              </strong>
-              <template #dropdown>
-                <BDropdownItem @click="$emit('delete')">
-                  <BIcon icon="trash-alt" class="mr-2" /><strong>Delete</strong>
-                </BDropdownItem>
-              </template>
-            </ButtonWithDropdown>
+          <ButtonWithDropdown
+              v-if="!submitted || $store.state.USER.roles && $store.state.USER.roles.admin"
+              :disabled="loading"
+              :loading="loading"
+              outlined
+              position="is-top-left"
+              type="is-danger"
+              @click="handleCancel"
+          >
+            <strong>
+              Cancel
+            </strong>
+            <template #dropdown>
+              <BDropdownItem @click="$emit('delete')">
+                <BIcon
+                    class="mr-2"
+                    icon="trash-alt"
+                />
+                <strong>Delete</strong>
+              </BDropdownItem>
+            </template>
+          </ButtonWithDropdown>
         </div>
         <BButton
+            v-if="!submitted"
             :disabled="loading"
             :loading="loading"
             type="is-primary"
@@ -157,7 +167,7 @@ import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
 import BInputWithValidator from '@/components/inputs/BInputWithValidator.vue';
 import MapComponent from '@/components/park-editor/MapComponent.vue';
 import {ValidationObserver} from 'vee-validate';
-import {Park, ParkPhotoUpload} from '@/types';
+import {Park, ParkPhotoUpload, PathNames} from '@/types';
 import ParkFormImage from '@/components/park/ParkFormImage.vue';
 import ParkFormName from '@/components/park/park-form/ParkFormName.vue';
 import ParkCarousel from '@/components/park/ParkCarousel.vue';
@@ -175,6 +185,7 @@ export default class ParkForm extends Vue {
   @Prop(Array) private readonly uploads!: ParkPhotoUpload[];
   @Prop(Object) private readonly value!: Park;
   @Prop(Boolean) private readonly editing!: boolean;
+  @Prop(Boolean) private readonly submitted!: boolean;
 
   private newPark: Park = this.value;
 
@@ -186,6 +197,14 @@ export default class ParkForm extends Vue {
   @Watch('newPark', {deep: true})
   onNewParkChanged(val: Park) {
     this.$emit('input', val);
+  }
+
+  public handleCancel() {
+    if (window.history.length) {
+      this.$router.back();
+    } else {
+      this.$router.push({name: PathNames.MyParks});
+    }
   }
 }
 </script>
